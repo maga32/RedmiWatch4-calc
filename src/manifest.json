@@ -1,6 +1,6 @@
 {
-  "package": "com.application.watch.demo",
-  "name": "rmw4calc",
+  "package": "org.suckdns.sung-a.calc",
+  "name": "계산기",
   "versionName": "1.0.0",
   "versionCode": 1,
   "minPlatformVersion": 1000,
@@ -9,22 +9,16 @@
     "watch"
   ],
   "features": [
-    {
-      "name": "system.router"
-    }
   ],
   "config": {
     "logLevel": "log",
-    "designWidth": 480
+    "designWidth": 390
   },
   "router": {
     "entry": "pages/index",
     "pages": {
       "pages/index": {
         "component": "index"
-      },
-      "pages/detail": {
-        "component": "detail"
       }
     }
   }

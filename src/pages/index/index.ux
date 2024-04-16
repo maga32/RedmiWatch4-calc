@@ -1,49 +1,108 @@
 <template>
-  <div class="demo-page">
-    <text class="title">{{$t('a.b')}},欢迎打开{{title}}</text>
-    <!-- 点击跳转详情页 -->
-    <input class="btn" type="button" value="跳转到详情页" onclick="routeDetail" />
+  <div class="calculator-wrap">
+    <div class="text-end preView"><text>{{preView}}</text></div>
+    <div class="text-end view"><text>{{view}}</text></div>
+
+    <div>
+      <div class="btn btn2 operation" @click="ac()"><text>AC</text></div>
+      <div class="btn operation"><text>DEL</text></div>
+      <div class="btn operation"><text>÷</text></div>
+    </div>
+    <div class="">
+      <div class="btn number" @click="num('7')"><text>7</text></div>
+      <div class="btn number" @click="num('8')"><text>8</text></div>
+      <div class="btn number" @click="num('9')"><text>9</text></div>
+      <div class="btn operation"><text>x</text></div>
+    </div>
+    <div>
+      <div class="btn number" @click="num('4')"><text>4</text></div>
+      <div class="btn number" @click="num('5')"><text>5</text></div>
+      <div class="btn number" @click="num('6')"><text>6</text></div>
+      <div class="btn operation"><text>+</text></div>
+    </div>
+    <div>
+      <div class="btn number" @click="num('1')"><text>1</text></div>
+      <div class="btn number" @click="num('2')"><text>2</text></div>
+      <div class="btn number" @click="num('3')"><text>3</text></div>
+      <div class="btn operation"><text>-</text></div>
+    </div>
+    <div>
+      <div class="btn number" @click="num('0')"><text>0</text></div>
+      <div class="btn number" @click="dot()"><text>.</text></div>
+      <div class="btn operation"><text>=</text></div>
+    </div>
   </div>
 </template>
-
 <script>
 import router from '@system.router'
 import configuration from '@system.configuration'
 
 export default {
-  // 页面级组件的数据模型，影响传入数据的覆盖机制：private内定义的属性不允许被覆盖
-  private: {
-    title: '示例页面'
+  data:{
+    preView: '',
+    view: '',
   },
-
-  routeDetail() {
-    // 跳转到应用内的某个页面，router用法详见：文档->接口->页面路由
-    router.push({
-      uri: '/pages/detail'
-    })
+  ac() {
+    this.preView = ''
+    this.view = ''
+  },
+  num(val) {
+    this.preView = this.preView + val + ''
+    
+    this.view = this.view + val + ''
   }
 }
 </script>
 
 <style>
-.demo-page {
+.calculator-wrap {
+  width: 390px;
+  height: 450px;
+  max-width: 390px;
+  max-height: 450px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background-color: black;
 }
 
-.title {
-  font-size: 20px;
-  text-align: center;
+.preView {
+  background-color: green;
+  height: 30px;
+  max-height: 30px;
+}
+
+.view {
+  background-color: red;
+  height: 40px;
+  max-height: 40px;
+}
+
+.text-end {
+  width: 338px;
+  justify-content: flex-end;
+  color: white;
 }
 
 .btn {
-  width: 200px;
+  justify-content: center;
+  align-content: center;
+  background-color: rgb(40,40,40);
+  border-radius: 15px;
+  width: 90px;
   height: 40px;
-  margin-top: 20px;
-  border-radius: 5px;
-  background-color: #09ba07;
-  font-size: 20px;
-  color: #ffffff;
+  margin: 3px;
+}
+
+.btn2 {
+  width: 190px;
+}
+
+.number {
+  color: white;
+}
+
+.operation {
+  color: rgb(191,98,59);
 }
 </style>
