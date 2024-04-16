@@ -1,35 +1,35 @@
 <template>
   <div class="calculator-wrap">
     <div class="text-end preView"><text>{{preView}}</text></div>
-    <div class="text-end view"><text>{{view}}</text></div>
+    <div class="text-end view"><text style="font-size:{{fontSize}}px">{{view}}</text></div>
 
     <div>
       <div class="btn btn2 operation" @click="ac()"><text>AC</text></div>
-      <div class="btn operation"><text>DEL</text></div>
-      <div class="btn operation"><text>÷</text></div>
+      <div class="btn operation" @click="del()"><text>DEL</text></div>
+      <div class="btn operation" @click="func('÷')"><text>÷</text></div>
     </div>
     <div class="">
-      <div class="btn number" @click="num('7')"><text>7</text></div>
-      <div class="btn number" @click="num('8')"><text>8</text></div>
-      <div class="btn number" @click="num('9')"><text>9</text></div>
-      <div class="btn operation"><text>x</text></div>
+      <div class="btn number" @click="num(7)"><text>7</text></div>
+      <div class="btn number" @click="num(8)"><text>8</text></div>
+      <div class="btn number" @click="num(9)"><text>9</text></div>
+      <div class="btn operation" @click="func('×')"><text>×</text></div>
     </div>
     <div>
-      <div class="btn number" @click="num('4')"><text>4</text></div>
-      <div class="btn number" @click="num('5')"><text>5</text></div>
-      <div class="btn number" @click="num('6')"><text>6</text></div>
-      <div class="btn operation"><text>+</text></div>
+      <div class="btn number" @click="num(4)"><text>4</text></div>
+      <div class="btn number" @click="num(5)"><text>5</text></div>
+      <div class="btn number" @click="num(6)"><text>6</text></div>
+      <div class="btn operation" @click="func('+')"><text>+</text></div>
     </div>
     <div>
-      <div class="btn number" @click="num('1')"><text>1</text></div>
-      <div class="btn number" @click="num('2')"><text>2</text></div>
-      <div class="btn number" @click="num('3')"><text>3</text></div>
-      <div class="btn operation"><text>-</text></div>
+      <div class="btn number" @click="num(1)"><text>1</text></div>
+      <div class="btn number" @click="num(2)"><text>2</text></div>
+      <div class="btn number" @click="num(3)"><text>3</text></div>
+      <div class="btn operation" @click="func('-')"><text>-</text></div>
     </div>
     <div>
-      <div class="btn number" @click="num('0')"><text>0</text></div>
+      <div class="btn number" @click="num(0)"><text>0</text></div>
       <div class="btn number" @click="dot()"><text>.</text></div>
-      <div class="btn operation"><text>=</text></div>
+      <div class="btn operation" @click="equal()"><text>=</text></div>
     </div>
   </div>
 </template>
@@ -39,17 +39,40 @@ import configuration from '@system.configuration'
 
 export default {
   data:{
-    preView: '',
-    view: '',
+    tmpPreView: '',
+    tmpView: '',
+    fontSize: '25'
+  },
+  computed: {
+    view() {
+      return this.tmpView ? this.tmpView.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',') : ''
+    },
+    preView() {
+      return this.tmpPreView.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')
+    }
   },
   ac() {
-    this.preView = ''
-    this.view = ''
+    this.tmpPreView = ''
+    this.tmpView = ''
+  },
+  del() {
+    this.tmpView = this.tmpView.slice(0,-1)
   },
   num(val) {
-    this.preView = this.preView + val + ''
-    
-    this.view = this.view + val + ''
+    if(this.tmpView == '0' && val == '0') return false;
+    this.tmpView += val
+    this.fontSize = (this.tmpView && this.tmpView.length > 15) ? '20' : '30'
+  },
+  dot() {
+    if(!this.tmpView) {
+      this.tmpView = '0.'
+    } else if(this.tmpView.indexOf('.') == -1) {
+      this.tmpView += '.'
+    }
+  },
+  func(val) {
+    this.tmpPreView = this.tmpView + val
+    this.tmpView = ''
   }
 }
 </script>
@@ -90,12 +113,12 @@ export default {
   background-color: rgb(40,40,40);
   border-radius: 15px;
   width: 90px;
-  height: 40px;
+  height: 60px;
   margin: 3px;
 }
 
 .btn2 {
-  width: 190px;
+  width: 186px;
 }
 
 .number {
