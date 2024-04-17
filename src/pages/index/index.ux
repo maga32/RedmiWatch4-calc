@@ -4,7 +4,8 @@
     <div class="text-end view"><text style="font-size:{{viewFontSize}}px">{{view}}</text></div>
 
     <div>
-      <div class="btn btn2 operation" @click="ac()"><text>AC</text></div>
+      <div class="btn operation" @click="ac()"><text>AC</text></div>
+      <div class="btn operation" @click="percent()"><text>%</text></div>
       <div class="btn operation" @click="del()"><text>DEL</text></div>
       <div class="btn operation" @click="func('÷')"><text>÷</text></div>
     </div>
@@ -83,6 +84,10 @@ export default {
     if(!this.tmpPreView || !this.tmpView) return false
     const symbol = this.tmpPreView.substr(-1)
     this.tmpPreView = this.tmpPreView.slice(0,-1)
+
+    const xexp = Math.pow(10, this.tmpPreView.length - this.tmpPreView.indexOf('.') - 1)
+    const yexp = Math.pow(10, this.tmpView.length - this.tmpView.indexOf('.') - 1)
+    const tens = Math.max(100, xexp, yexp)
     
     switch(symbol) {
       case '+':
@@ -100,7 +105,7 @@ export default {
       default:
         return
     }
-    this.tmpView += ''
+    this.tmpView = (Math.round(this.tmpView * tens) / tens) + ''
     this.tmpPreView = ''
   },
   func(val) {
@@ -109,6 +114,29 @@ export default {
     this.equal()
     this.tmpPreView = this.tmpView + val
     this.tmpView = ''
+  },
+  percent() {
+    if(!this.tmpView) return false
+    if(!this.tmpPreView) {
+      this.tmpView = (Number(this.tmpView) / 100) + ''
+    } else {
+      const symbol = this.tmpPreView.substr(-1)
+      this.tmpPreView = this.tmpPreView.slice(0,-1) + 'x'
+
+      switch(symbol) {
+        case '+':
+          this.tmpView = Number(this.tmpView) / 100 + 1
+          break
+        case '-':
+          this.tmpView = 1 - Number(this.tmpView) / 100
+          break
+        case 'x':
+          this.tmpView = Number(this.tmpView) / 100
+          break
+      }
+      this.tmpView += ''
+      this.equal()
+    }
   }
 }
 </script>
@@ -149,10 +177,6 @@ export default {
   width: 90px;
   height: 60px;
   margin: 3px;
-}
-
-.btn2 {
-  width: 186px;
 }
 
 .number {

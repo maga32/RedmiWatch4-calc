@@ -1,7 +1,7 @@
 {
   "package": "org.duckdns.sung-a.calc",
   "name": "계산기",
-  "versionName": "1.0.0",
+  "versionName": "1.0.1",
   "versionCode": 1,
   "minPlatformVersion": 1000,
   "icon": "/common/logo.png",
