@@ -1,7 +1,7 @@
 <template>
   <div class="calculator-wrap">
-    <div class="text-end preView"><text>{{preView}}</text></div>
-    <div class="text-end view"><text style="font-size:{{fontSize}}px">{{view}}</text></div>
+    <div class="text-end preView"><text style="font-size:{{preViewFontSize}}px">{{preView}}</text></div>
+    <div class="text-end view"><text style="font-size:{{viewFontSize}}px">{{view}}</text></div>
 
     <div>
       <div class="btn btn2 operation" @click="ac()"><text>AC</text></div>
@@ -12,7 +12,7 @@
       <div class="btn number" @click="num(7)"><text>7</text></div>
       <div class="btn number" @click="num(8)"><text>8</text></div>
       <div class="btn number" @click="num(9)"><text>9</text></div>
-      <div class="btn operation" @click="func('×')"><text>×</text></div>
+      <div class="btn operation" @click="func('x')"><text>×</text></div>
     </div>
     <div>
       <div class="btn number" @click="num(4)"><text>4</text></div>
@@ -40,8 +40,7 @@ import configuration from '@system.configuration'
 export default {
   data:{
     tmpPreView: '',
-    tmpView: '',
-    fontSize: '25'
+    tmpView: ''
   },
   computed: {
     view() {
@@ -49,6 +48,12 @@ export default {
     },
     preView() {
       return this.tmpPreView.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')
+    },
+    viewFontSize() {
+      return (this.tmpView.length > 12) ? '20' : '30'
+    },
+    preViewFontSize() {
+      return (this.tmpPreView.length > 12) ? '20' : '30'
     }
   },
   ac() {
@@ -56,12 +61,16 @@ export default {
     this.tmpView = ''
   },
   del() {
-    this.tmpView = this.tmpView.slice(0,-1)
+    if(!this.tmpView && this.tmpPreView) {
+      this.tmpView = this.tmpPreView.slice(0,-1)
+      this.tmpPreView = ''      
+    } else {
+      this.tmpView = this.tmpView.slice(0,-1)
+    }
   },
   num(val) {
-    if(this.tmpView == '0' && val == '0') return false;
+    if(this.tmpView == '0' && val == '0') return false
     this.tmpView += val
-    this.fontSize = (this.tmpView && this.tmpView.length > 15) ? '20' : '30'
   },
   dot() {
     if(!this.tmpView) {
@@ -70,7 +79,34 @@ export default {
       this.tmpView += '.'
     }
   },
+  equal() {
+    if(!this.tmpPreView || !this.tmpView) return false
+    const symbol = this.tmpPreView.substr(-1)
+    this.tmpPreView = this.tmpPreView.slice(0,-1)
+    
+    switch(symbol) {
+      case '+':
+        this.tmpView = Number(this.tmpPreView) + Number(this.tmpView)
+        break
+      case '-':
+        this.tmpView = Number(this.tmpPreView) - Number(this.tmpView)
+        break
+      case 'x':
+        this.tmpView = Number(this.tmpPreView) * Number(this.tmpView)
+        break
+      case '÷':
+        this.tmpView = Number(this.tmpPreView) / Number(this.tmpView)
+        break
+      default:
+        return
+    }
+    this.tmpView += ''
+    this.tmpPreView = ''
+  },
   func(val) {
+    if(!this.tmpView && !this.tmpPreView) return false
+    if(!this.tmpView && this.tmpPreView) this.del()
+    this.equal()
     this.tmpPreView = this.tmpView + val
     this.tmpView = ''
   }
@@ -90,13 +126,11 @@ export default {
 }
 
 .preView {
-  background-color: green;
   height: 30px;
   max-height: 30px;
 }
 
 .view {
-  background-color: red;
   height: 40px;
   max-height: 40px;
 }
