@@ -38,5 +38,5 @@
 ###
 ###
 ## 3. 기타정보
-- 위 앱은 샤오미 vela 언어로 개발되었습니다 : https://iot.mi.com/vela/quickapp
+- 위 앱은 샤오미 vela 프레임워크로 개발되었습니다 : https://iot.mi.com/vela/quickapp
 - 수정된 Mi Fitness 앱 정보 : https://www.bandbbs.cn/threads/9893/
